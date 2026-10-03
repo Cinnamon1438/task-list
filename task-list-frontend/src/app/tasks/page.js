@@ -1,113 +1,93 @@
 import Link from 'next/link';
 import CreateTaskModal from './CreateTaskModal';
 import TaskActions from './TaskActions';
-import Pagination from './Pagination';
-import { apiFetch } from '@/lib/api';
+import { getTasks } from '@/lib/api';
 
-async function getTasks(page = 1) {
-  try {
-    const res = await apiFetch(`/tasks?page=${page}`);
-    if (!res.ok) return { data: [], meta: null };
-
-    const result = await res.json();
-
-    if (result && result.data) {
-      return {
-        data: result.data,
-        meta: result,
-      };
-    }
-
-    return { data: Array.isArray(result) ? result : [], meta: null };
-  } catch (error) {
-    console.error('Failed fetching tasks:', error);
-    return { data: [], meta: null };
-  }
-}
-
-export default async function TasksPage({ searchParams }) {
-  const resolvedParams = await searchParams;
-  const page = resolvedParams?.page ? parseInt(resolvedParams.page) : 1;
-
-  const { data: tasks, meta } = await getTasks(page);
+export default async function TasksPage() {
+  const { data: tasks } = await getTasks();
 
   return (
-    <main className="max-w-3xl mx-auto py-12 px-4 sm:px-6">
-      {/* Header Utama & Tombol Tambah Task */}
-      <div className="flex items-center justify-between mb-8 pb-4 border-b border-slate-200">
-        <div>
-          <h1 className="text-2xl font-bold text-slate-900 tracking-tight">
-            Daftar Tugas
-          </h1>
-          <p className="text-xs text-slate-500 mt-1">
-            Kelola dan pantau seluruh progres tugas harianmu
-          </p>
-        </div>
-        <CreateTaskModal />
-      </div>
-
-      {/* List Task / State Kosong */}
-      {tasks.length === 0 ? (
-        <div className="text-center py-16 bg-white rounded-2xl border border-dashed border-slate-300 p-8 shadow-sm">
-          <div className="w-12 h-12 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-3 text-slate-400">
-            📝
+    <div className="min-h-screen bg-gray-50 py-10 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-4xl mx-auto space-y-6">
+        
+        {/* Header Section */}
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+          <div>
+            <h1 className="text-2xl font-bold text-gray-900">Daftar Tugas</h1>
+            <p className="text-sm text-gray-500 mt-1">
+              Kelola dan pantau seluruh progres tugas harianmu.
+            </p>
           </div>
-          <h3 className="text-sm font-semibold text-slate-800">Belum ada tugas</h3>
-          <p className="text-xs text-slate-500 mt-1 max-w-sm mx-auto">
-            Daftar tugas kamu masih kosong. Klik tombol di atas untuk membuat tugas baru!
-          </p>
+          <CreateTaskModal />
         </div>
-      ) : (
-        <div className="bg-white rounded-xl border border-slate-200/80 shadow-sm divide-y divide-slate-100 overflow-hidden">
-          {tasks.map((task) => (
-            <div
-              key={task.id}
-              className="p-4 sm:p-5 flex items-center justify-between hover:bg-slate-50/80 transition-colors group"
-            >
-              <div className="space-y-1.5 max-w-md pr-4">
-                <div className="flex items-center gap-2">
-                  <span
-                    className={`inline-block w-2 h-2 rounded-full ${
-                      task.completed ? 'bg-emerald-500' : 'bg-amber-500'
-                    }`}
-                  />
-                  <Link
-                    href={`/tasks/${task.id}`}
-                    className={`text-sm sm:text-base font-medium transition-colors block truncate ${
-                      task.completed
-                        ? 'line-through text-slate-400 group-hover:text-slate-500'
-                        : 'text-slate-800 group-hover:text-blue-600'
-                    }`}
-                  >
-                    {task.title}
-                  </Link>
-                </div>
 
-                <div className="flex items-center gap-3 text-xs text-slate-400 pl-4">
-                  <span>
-                    {new Date(task.created_at).toLocaleString('id-ID', {
-                      dateStyle: 'medium',
-                      timeStyle: 'short',
-                    })}
-                  </span>
+        {/* Task List Section */}
+        {!tasks || tasks.length === 0 ? (
+          <div className="text-center py-12 bg-white rounded-xl border border-dashed border-gray-200">
+            <svg
+              className="mx-auto h-12 w-12 text-gray-400"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={1.5}
+                d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 002 0h2a2 2 0 002 0"
+              />
+            </svg>
+            <h3 className="mt-2 text-sm font-semibold text-gray-900">Belum Ada Tugas</h3>
+            <p className="mt-1 text-sm text-gray-500">
+              Mulai buat tugas baru dengan menekan tombol di atas.
+            </p>
+          </div>
+        ) : (
+          <div className="grid gap-4">
+            {tasks.map((task) => (
+              <div
+                key={task.id}
+                className="bg-white p-5 rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition-shadow flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4"
+              >
+                <div className="space-y-1">
+                  <div className="flex items-center gap-2">
+                    <Link 
+                      href={`/tasks/${task.id}`}
+                      className="group inline-block cursor-pointer"
+                    >
+                      <h3
+                        className={`text-lg font-semibold transition-all duration-150 ${
+                          task.completed 
+                            ? 'line-through text-gray-400 group-hover:text-gray-600' 
+                            : 'text-gray-900 group-hover:text-blue-600'
+                        }`}
+                      >
+                        {task.title}
+                      </h3>
+                    </Link>
+                    <span
+                      className={`px-2.5 py-0.5 text-xs font-medium rounded-full ${
+                        task.completed
+                          ? 'bg-green-50 text-green-700 border border-green-200'
+                          : 'bg-amber-50 text-amber-700 border border-amber-200'
+                      }`}
+                    >
+                      {task.completed ? 'Selesai' : 'Pending'}
+                    </span>
+                  </div>
                   {task.description && (
-                    <>
-                      <span>•</span>
-                      <span className="truncate max-w-50">{task.description}</span>
-                    </>
+                    <p className="text-sm text-gray-600 line-clamp-2">{task.description}</p>
                   )}
                 </div>
+
+                {/* Komponen Tombol Aksi */}
+                <TaskActions task={task} />
               </div>
+            ))}
+          </div>
+        )}
 
-              {/* Tombol Aksi Edit & Hapus */}
-              <TaskActions task={task} />
-            </div>
-          ))}
-        </div>
-      )}
-
-      {/* Navigasi Pagination */}
-      <Pagination meta={meta} />
-    </main>
+      </div>
+    </div>
   );
 }

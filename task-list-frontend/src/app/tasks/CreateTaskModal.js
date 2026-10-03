@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { apiFetch } from '@/lib/api';
+import { createTask } from '@/lib/api';
 
 export default function CreateTaskModal() {
   const [isOpen, setIsOpen] = useState(false);
@@ -13,31 +13,21 @@ export default function CreateTaskModal() {
   const router = useRouter();
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (!title || !description) return;
+  e.preventDefault();
+  setIsSubmitting(true);
 
-    setIsSubmitting(true);
-    try {
-      const res = await apiFetch('/tasks', {
-        method: 'POST',
-        body: JSON.stringify({
-          title,
-          description,
-          long_description: longDescription,
-        }),
-      });
+  try {
+    await createTask({
+      title: title || '',
+      description: description || '',
+      long_description: longDescription || null,
+      completed: false,
+    });
 
-      if (res.ok) {
-        setTitle('');
-        setDescription('');
-        setLongDescription('');
-        setIsOpen(false);
-        router.refresh();
-      } else {
-        alert('Gagal menyimpan task baru');
-      }
+    setIsOpen(false);
+      router.refresh(); 
     } catch (error) {
-      console.error('Create task error:', error);
+      console.error('Create task error details:', error);
     } finally {
       setIsSubmitting(false);
     }
