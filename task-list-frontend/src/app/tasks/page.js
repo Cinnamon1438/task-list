@@ -3,6 +3,8 @@ import CreateTaskModal from './CreateTaskModal';
 import TaskActions from './TaskActions';
 import { getTasks } from '@/lib/api';
 
+export const dynamic = 'force-dynamic';
+
 export default async function TasksPage() {
   const { data: tasks } = await getTasks();
 
