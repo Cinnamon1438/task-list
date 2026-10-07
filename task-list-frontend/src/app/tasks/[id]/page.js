@@ -112,8 +112,8 @@ export default function TaskDetailPage({ params }) {
           </Link>
 
           <div className="flex items-center gap-2">
-            {!isEditing  (
-              <>
+            {!isEditing && (
+              <div className="flex items-center gap-2">
                 <button
                   type="button"
                   onClick={() => setIsEditing(true)}
@@ -132,7 +132,7 @@ export default function TaskDetailPage({ params }) {
                 >
                   {completed ? '↺ Tandai Belum Selesai' : '✓ Tandai Selesai'}
                 </button>
-              </>
+              </div>
             )}
           </div>
         </div>
