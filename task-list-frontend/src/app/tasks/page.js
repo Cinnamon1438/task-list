@@ -1,12 +1,17 @@
 import Link from 'next/link';
 import CreateTaskModal from './CreateTaskModal';
 import TaskActions from './TaskActions';
+import Pagination from './Pagination'; // 1. Import komponen Pagination
 import { getTasks } from '@/lib/api';
 
 export const dynamic = 'force-dynamic';
 
-export default async function TasksPage() {
-  const { data: tasks } = await getTasks();
+// 2. Terima searchParams dari Next.js (misal ?page=2)
+export default async function TasksPage({ searchParams }) {
+  const page = (await searchParams)?.page || 1;
+  
+  // 3. Ambil data tasks dan meta dari API (serta pass parameter page jika getTasks mendukung)
+  const { data: tasks, meta } = await getTasks(page);
 
   return (
     <div className="min-h-screen bg-gray-50 py-10 px-4 sm:px-6 lg:px-8">
@@ -45,48 +50,53 @@ export default async function TasksPage() {
             </p>
           </div>
         ) : (
-          <div className="grid gap-4">
-            {tasks.map((task) => (
-              <div
-                key={task.id}
-                className="bg-white p-5 rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition-shadow flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4"
-              >
-                <div className="space-y-1">
-                  <div className="flex items-center gap-2">
-                    <Link 
-                      href={`/tasks/${task.id}`}
-                      className="group inline-block cursor-pointer"
-                    >
-                      <h3
-                        className={`text-lg font-semibold transition-all duration-150 ${
-                          task.completed 
-                            ? 'line-through text-gray-400 group-hover:text-gray-600' 
-                            : 'text-gray-900 group-hover:text-blue-600'
+          <>
+            <div className="grid gap-4">
+              {tasks.map((task) => (
+                <div
+                  key={task.id}
+                  className="bg-white p-5 rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition-shadow flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4"
+                >
+                  <div className="space-y-1">
+                    <div className="flex items-center gap-2">
+                      <Link 
+                        href={`/tasks/${task.id}`}
+                        className="group inline-block cursor-pointer"
+                      >
+                        <h3
+                          className={`text-lg font-semibold transition-all duration-150 ${
+                            task.completed 
+                              ? 'line-through text-gray-400 group-hover:text-gray-600' 
+                              : 'text-gray-900 group-hover:text-blue-600'
+                          }`}
+                        >
+                          {task.title}
+                        </h3>
+                      </Link>
+                      <span
+                        className={`px-2.5 py-0.5 text-xs font-medium rounded-full ${
+                          task.completed
+                            ? 'bg-green-50 text-green-700 border border-green-200'
+                            : 'bg-amber-50 text-amber-700 border border-amber-200'
                         }`}
                       >
-                        {task.title}
-                      </h3>
-                    </Link>
-                    <span
-                      className={`px-2.5 py-0.5 text-xs font-medium rounded-full ${
-                        task.completed
-                          ? 'bg-green-50 text-green-700 border border-green-200'
-                          : 'bg-amber-50 text-amber-700 border border-amber-200'
-                      }`}
-                    >
-                      {task.completed ? 'Selesai' : 'Pending'}
-                    </span>
+                        {task.completed ? 'Selesai' : 'Pending'}
+                      </span>
+                    </div>
+                    {task.description && (
+                      <p className="text-sm text-gray-600 line-clamp-2">{task.description}</p>
+                    )}
                   </div>
-                  {task.description && (
-                    <p className="text-sm text-gray-600 line-clamp-2">{task.description}</p>
-                  )}
-                </div>
 
-                {/* Komponen Tombol Aksi */}
-                <TaskActions task={task} />
-              </div>
-            ))}
-          </div>
+                  {/* Komponen Tombol Aksi */}
+                  <TaskActions task={task} />
+                </div>
+              ))}
+            </div>
+
+            {/* 4. Tampilkan Komponen Pagination di sini */}
+            <Pagination meta={meta} />
+          </>
         )}
 
       </div>
