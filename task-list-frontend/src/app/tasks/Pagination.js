@@ -20,11 +20,10 @@ export default function Pagination({ meta }) {
 
   return (
     <div className="flex items-center justify-between border-t border-slate-200 pt-4 mt-6">
-      {/* Ringkasan Jumlah Data */}
       <p className="text-xs text-slate-500">
-        Menampilkan <span className="font-semibold text-slate-700">{meta.from || 0}</span> -{' '}
-        <span className="font-semibold text-slate-700">{meta.to || 0}</span> dari{' '}
-        <span className="font-semibold text-slate-700">{meta.total || 0}</span> data
+        Show <span className="font-semibold text-slate-700">{meta.from || 0}</span> -{' '}
+        <span className="font-semibold text-slate-700">{meta.to || 0}</span> From{' '}
+        <span className="font-semibold text-slate-700">{meta.total || 0}</span> Data
       </p>
 
       {/* Tombol Navigasi Halaman */}

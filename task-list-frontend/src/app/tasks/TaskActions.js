@@ -9,7 +9,7 @@ export default function TaskActions({ task }) {
   const router = useRouter();
 
   const handleDelete = async () => {
-    const confirmed = confirm(`Apakah kamu yakin ingin menghapus tugas "${task.title}"?`);
+    const confirmed = confirm(`Are you sure you want to delete the task? "${task.title}"?`);
     if (!confirmed) return;
 
     setLoading(true);
@@ -17,8 +17,8 @@ export default function TaskActions({ task }) {
       await deleteTask(task.id);
       router.refresh();
     } catch (error) {
-      console.error('Gagal menghapus task:', error);
-      alert('Gagal menghapus tugas. Silakan coba lagi.');
+      console.error('Failed To Delete Task:', error);
+      alert('Failed To Delete Task. Try Again Later.');
     } finally {
       setLoading(false);
     }
@@ -26,14 +26,14 @@ export default function TaskActions({ task }) {
 
   return (
     <div className="flex items-center gap-2 shrink-0">
-      {/* Tombol Hapus */}
+      {/* Delete Button */}
       <button
         type="button"
         onClick={handleDelete}
         disabled={loading}
         className="px-3 py-1.5 text-xs font-medium text-red-700 bg-red-50 hover:bg-red-100 rounded-lg transition-colors disabled:opacity-50"
       >
-        {loading ? 'Menghapus...' : 'Hapus'}
+        {loading ? 'Deleting...' : 'Delete'}
       </button>
     </div>
   );

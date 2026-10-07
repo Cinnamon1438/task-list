@@ -36,11 +36,11 @@ export default function ToggleStatusButton({ task }) {
         'Memproses...'
       ) : task.completed ? (
         <>
-          <span>↺</span> Tandai Belum Selesai
+          <span>↺</span> Mark as Not Completed
         </>
       ) : (
         <>
-          <span>✓</span> Tandai Selesai
+          <span>✓</span> Mark as Completed
         </>
       )}
     </button>

@@ -1,16 +1,14 @@
 import Link from 'next/link';
 import CreateTaskModal from './CreateTaskModal';
 import TaskActions from './TaskActions';
-import Pagination from './Pagination'; // 1. Import komponen Pagination
+import Pagination from './Pagination';
 import { getTasks } from '@/lib/api';
 
 export const dynamic = 'force-dynamic';
 
-// 2. Terima searchParams dari Next.js (misal ?page=2)
 export default async function TasksPage({ searchParams }) {
   const page = (await searchParams)?.page || 1;
   
-  // 3. Ambil data tasks dan meta dari API (serta pass parameter page jika getTasks mendukung)
   const { data: tasks, meta } = await getTasks(page);
 
   return (
@@ -20,9 +18,9 @@ export default async function TasksPage({ searchParams }) {
         {/* Header Section */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 bg-white p-6 rounded-xl shadow-sm border border-gray-100">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900">Daftar Tugas</h1>
+            <h1 className="text-2xl font-bold text-gray-900">Task List</h1>
             <p className="text-sm text-gray-500 mt-1">
-              Kelola dan pantau seluruh progres tugas harianmu.
+              Manage and track all daily tasks.
             </p>
           </div>
           <CreateTaskModal />
@@ -46,7 +44,7 @@ export default async function TasksPage({ searchParams }) {
             </svg>
             <h3 className="mt-2 text-sm font-semibold text-gray-900">Belum Ada Tugas</h3>
             <p className="mt-1 text-sm text-gray-500">
-              Mulai buat tugas baru dengan menekan tombol di atas.
+              Create a new task by pressing the button above.
             </p>
           </div>
         ) : (
@@ -80,7 +78,7 @@ export default async function TasksPage({ searchParams }) {
                             : 'bg-amber-50 text-amber-700 border border-amber-200'
                         }`}
                       >
-                        {task.completed ? 'Selesai' : 'Pending'}
+                        {task.completed ? 'Completed' : 'Pending'}
                       </span>
                     </div>
                     {task.description && (
@@ -88,13 +86,12 @@ export default async function TasksPage({ searchParams }) {
                     )}
                   </div>
 
-                  {/* Komponen Tombol Aksi */}
+                  {/* Action Button */}
                   <TaskActions task={task} />
                 </div>
               ))}
             </div>
 
-            {/* 4. Tampilkan Komponen Pagination di sini */}
             <Pagination meta={meta} />
           </>
         )}

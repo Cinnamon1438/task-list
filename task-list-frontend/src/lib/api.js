@@ -5,7 +5,6 @@ export async function getTasks(page = 1, limit = 5) {
   const from = (pageNum - 1) * limit;
   const to = from + limit - 1;
 
-  // Mengambil data sekaligus total count baris dari Supabase
   const { data, count, error } = await supabase
     .from('tasks')
     .select('*', { count: 'exact' })

@@ -45,12 +45,12 @@ export default function TaskForm() {
 
   return (
     <form onSubmit={handleSubmit} className="mb-8 p-6 bg-white border border-slate-200 rounded-xl shadow-sm space-y-4">
-      <h3 className="text-lg font-bold text-slate-800">Tambah Task Baru</h3>
+      <h3 className="text-lg font-bold text-slate-800">Add New Task</h3>
 
       {/* Title */}
       <input
         type="text"
-        placeholder="Judul Task (Title)..."
+        placeholder="Title..."
         value={title}
         onChange={(e) => setTitle(e.target.value)}
         required
@@ -60,7 +60,7 @@ export default function TaskForm() {
       {/* Description */}
       <input
         type="text"
-        placeholder="Deskripsi Singkat (Description)..."
+        placeholder="Description..."
         value={description}
         onChange={(e) => setDescription(e.target.value)}
         required
@@ -69,7 +69,7 @@ export default function TaskForm() {
 
       {/* Long Description */}
       <textarea
-        placeholder="Deskripsi Detail (Long Description)..."
+        placeholder="Long Description..."
         value={longDescription}
         onChange={(e) => setLongDescription(e.target.value)}
         rows="3"
@@ -81,7 +81,7 @@ export default function TaskForm() {
         disabled={isSubmitting}
         className="w-full py-2.5 px-4 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors disabled:bg-slate-400"
       >
-        {isSubmitting ? 'Menyimpan...' : 'Tambah Task'}
+        {isSubmitting ? 'Save...' : 'Add Task'}
       </button>
     </form>
   );
