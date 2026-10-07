@@ -1,17 +1,38 @@
 import { supabase } from './supabase';
 
-export async function getTasks() {
-  const { data, error } = await supabase
+export async function getTasks(page = 1, limit = 5) {
+  const pageNum = Number(page) || 1;
+  const from = (pageNum - 1) * limit;
+  const to = from + limit - 1;
+
+  // Mengambil data sekaligus total count baris dari Supabase
+  const { data, count, error } = await supabase
     .from('tasks')
-    .select('*')
-    .order('id', { ascending: false });
+    .select('*', { count: 'exact' })
+    .order('id', { ascending: false })
+    .range(from, to);
 
   if (error) {
     console.error('Error fetching tasks:', error.message);
-    return { data: [] };
+    return { 
+      data: [], 
+      meta: { total: 0, current_page: 1, last_page: 1, from: 0, to: 0 } 
+    };
   }
 
-  return { data: data || [] };
+  const total = count || 0;
+  const lastPage = Math.ceil(total / limit) || 1;
+
+  return {
+    data: data || [],
+    meta: {
+      total,
+      current_page: pageNum,
+      last_page: lastPage,
+      from: total > 0 ? from + 1 : 0,
+      to: Math.min(to + 1, total),
+    },
+  };
 }
 
 export async function getTask(id) {
