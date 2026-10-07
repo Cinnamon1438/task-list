@@ -49,7 +49,7 @@ export default function CreateTaskModal() {
 
             <form onSubmit={handleSubmit} className="space-y-3">
               <div>
-                <label className="text-xs font-semibold text-slate-600 mb-1 block">Judul</label>
+                <label className="text-xs font-semibold text-slate-600 mb-1 block">Title</label>
                 <input
                   type="text"
                   placeholder="Task Title..."
@@ -61,7 +61,7 @@ export default function CreateTaskModal() {
               </div>
 
               <div>
-                <label className="text-xs font-semibold text-slate-600 mb-1 block">Deskripsi Singkat</label>
+                <label className="text-xs font-semibold text-slate-600 mb-1 block">Description</label>
                 <input
                   type="text"
                   placeholder="Descrition..."
@@ -73,7 +73,7 @@ export default function CreateTaskModal() {
               </div>
 
               <div>
-                <label className="text-xs font-semibold text-slate-600 mb-1 block">Deskripsi Lengkap (Opsional)</label>
+                <label className="text-xs font-semibold text-slate-600 mb-1 block">Long Description</label>
                 <textarea
                   placeholder="Long Description..."
                   value={longDescription}
