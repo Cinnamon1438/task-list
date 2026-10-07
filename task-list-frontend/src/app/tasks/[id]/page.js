@@ -112,7 +112,7 @@ export default function TaskDetailPage({ params }) {
           </Link>
 
           <div className="flex items-center gap-2">
-            {!isEditing ? (
+            {!isEditing  (
               <>
                 <button
                   type="button"
@@ -133,14 +133,6 @@ export default function TaskDetailPage({ params }) {
                   {completed ? '↺ Tandai Belum Selesai' : '✓ Tandai Selesai'}
                 </button>
               </>
-            ) : (
-              <button
-                type="button"
-                onClick={() => setIsEditing(false)}
-                className="px-3.5 py-2 rounded-lg text-sm font-medium text-gray-600 bg-gray-100 hover:bg-gray-200 transition-colors"
-              >
-                Batal Edit
-              </button>
             )}
           </div>
         </div>
